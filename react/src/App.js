@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createRef } from "react";
+import React, { useState, createRef } from "react";
 import Video from "twilio-video";
 
 const TOKENS = [
