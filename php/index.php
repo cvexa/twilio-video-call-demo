@@ -6,6 +6,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 use Twilio\Jwt\AccessToken;
 use Twilio\Jwt\Grants\VideoGrant;
 use Twilio\Jwt\Grants\ChatGrant;
+use Twilio\Rest\Client;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -17,13 +18,14 @@ $serviceSid = $_ENV['TWILIO_CHAT_SERVICE_ID'];
 // Use identity and room from query string if provided
 $identity = isset($_GET["identity"]) ? $_GET["identity"] : "identity";
 $room = isset($_GET["room"]) ? $_GET["room"] :  "";
+$TWILIO_AUTH_TOKEN = '8190dfc26464a0f5cf1f13c7e948bb75';
 
 // Create access token, which we will serialize and send to the client
 $token = new AccessToken(
     $TWILIO_ACCOUNT_SID, 
     $TWILIO_API_KEY, 
     $TWILIO_API_SECRET, 
-    3600, 
+    6200,
     $identity
 );
 
@@ -44,4 +46,11 @@ if(empty($room)){
     echo $token->toJWT();
 }
 
+if(isset($_GET['disconnect'])){
+$twilio = new Client($TWILIO_ACCOUNT_SID, $TWILIO_AUTH_TOKEN);
+$participant = $twilio->video->v1->rooms("videoRoom1")
+                                 ->participants("svetliVideo2")
+                                 ->update(["status" => "disconnected"]);
+                               print_r($participant->sid);
+}
 
